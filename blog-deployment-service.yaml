@@ -21,7 +21,7 @@ spec: # specifikationer av vad deploymenten ska innehålla
           ports: # portar för att nå container
             - containerPort: 8000 # port för att nå container
 ---
-apiVersion: v1
+apiVersion: v1 # versionen av Kubernetes API
 kind: Service
 metadata:
   name: blog-service
