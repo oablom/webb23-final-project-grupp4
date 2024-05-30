@@ -1,0 +1,36 @@
+apiVersion: apps/v1 # verisionen av Kubernetes API
+kind: Deployment # typen av objekt
+metadata: # metadata (namn, taggar)
+  name: blog-deployment # namnet på deploymenten
+  labels: # taggar
+    app: blog # tagg för appen
+spec: # specifikationer av vad deploymenten ska innehålla
+  replicas: 2 # antal instanser av podden dvs 2 poddar
+  selector: # väljer vilka pods som ska ingå i deploymenten
+    matchLabels: # matchar pods med specifika taggar
+      app: blog # tagg för appen
+  template: # mall för pods
+    metadata: # metadata för podden
+      labels: # taggar
+        app: blog # tagg för appens instans i podden
+    spec: # specifikationer för vad varje pod ska innehålla
+      containers: # containers i podden
+        - name: blog # namn på container
+          image: blog-project # namn på image
+          imagePullPolicy: Never # policy för att inte hämta image från registry
+          ports: # portar för att nå container
+            - containerPort: 8000 # port för att nå container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-service
+spec:
+  selector:
+    app: blog
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      nodePort: 30000
+  type: NodePort
