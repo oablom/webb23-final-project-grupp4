@@ -1,0 +1,26 @@
+version: "3.10" # docker-compose version
+
+services: # vad som ska köras
+  db:
+    image: postgres
+    environment: # miljövariabler
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: django_db
+    volumes: # volymer dvs lagring
+      - db_data:/var/lib/postgresql/data
+
+  web: # webbserver
+    build: # bygg image
+      context: . # dockerfile finns i samma mapp
+      dockerfile: Dockerfile # namn på dockerfile
+    command: python blog_project/manage.py runserver 0.0.0.0:8000 # kommando för att köra servern
+    volumes:
+      - .:/code
+    ports: # exponerar portar
+      - "8000:8000" # port för att nå servern och port för att nå container
+    depends_on:
+      - db
+
+volumes:
+  db_data:
